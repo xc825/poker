@@ -13,8 +13,9 @@ In folder ./poker run:
 
 ####Running
 
-In folder ./poker run
-./poker
+In folder _poker_ run
+
+`$ /poker`
 
 To feed stream from file run
 

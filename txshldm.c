@@ -60,6 +60,13 @@ int txs_read_cards(char *line, txs_game *game) {
 		game->hands[i].cards[0].c[1] = *(p++);
 		game->hands[i].cards[1].c[0] = *(p++);
 		game->hands[i].cards[1].c[1] = *(p++);
+
+		if (game->omaha) {
+			game->hands[i].cards[2].c[0] = *(p++);
+			game->hands[i].cards[2].c[1] = *(p++);
+			game->hands[i].cards[3].c[0] = *(p++);
+			game->hands[i].cards[3].c[1] = *(p++);
+		}
 	}
 
 	return SUCCESS;
@@ -367,6 +374,7 @@ int evaluate_hand(txs_game *game, int hand_num) {
 		evaluate_hand_Omaha(game, hand_num);
 	else
 		evaluate_hand_Texas(game, hand_num);
+
 	return 0;
 }
 
@@ -442,6 +450,52 @@ int evaluate_hand_Texas(txs_game *game, int hand_num) {
 
 
 int evaluate_hand_Omaha(txs_game *game, int hand_num) {
+	//printf("%s()\n", __func__);
+	int c1,c2,c3,h1,h2;
+	int kickers[3];
+	txs_card cards5[5] = {0};
+	hand_value val;
+
+	//community cards - 3 of 5
+	//hand cards - 2 of 4
+	for (c1 = 0; c1 < 5; c1++) {
+		for(c2 = 0; c2 < 5; c2++) {
+			for (c3 = 0; c3 < 5; c3 ++){
+				if ((c1 == c2) || (c2 == c3) || (c3 == c1))
+					continue;
+
+				for(h1 = 0; h1 < 4; h1++) {
+					for (h2 = 0; h2 < 4; h2++) {
+						if (h1 == h2)
+							continue;
+
+						cards5[0] = game->ccards[c1];
+						cards5[1] = game->ccards[c2];
+						cards5[2] = game->ccards[c3];
+						cards5[3] = game->hands[hand_num].cards[h1];
+						cards5[4] = game->hands[hand_num].cards[h2];
+
+						val = evaluate_five(cards5, kickers);
+						if ( val > game->hands[hand_num].value) {
+							memcpy(game->hands[hand_num].best_combination, cards5, sizeof(txs_card) * 5);
+							memcpy(game->hands[hand_num].kickers, kickers, sizeof(int) * 3);
+							game->hands[hand_num].value = val;
+						} else if	(val == game->hands[hand_num].value) {
+							int k;
+							for (k = 0; k < 3; k++) {
+								if (kickers[k] > game->hands[hand_num].kickers[k]) {
+									memcpy(game->hands[hand_num].best_combination, cards5, sizeof(txs_card) * 5);
+									memcpy(game->hands[hand_num].kickers, kickers, sizeof(int) * 3);
+									game->hands[hand_num].value = val;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
 	return 0;
 }
@@ -462,7 +516,8 @@ int compare_hands(const void *h1, const void *h2) {
 	}
 
 	//compare ahphabetically
-	for (i = 0; i < 2; i++) {//Todo: 4 for Omaha
+	// 2 cards in txs holdem, 4 in Omaha
+	for (i = 0; i < 4; i++) {
 		if (hand1->cards[i].c[0] != hand2->cards[i].c[0])
 			return (hand1->cards[i].c[0] - hand2->cards[i].c[0]);
 		else if (hand1->cards[i].c[1] != hand2->cards[i].c[1])
@@ -499,9 +554,6 @@ void print_hands(txs_game *game) {
 			txs_card card = game->hands[i].cards[j];
 			printf("%c%c", card.c[0], card.c[1]);
 		}
-
-		txs_hand hand = game->hands[i];
-		printf("k:%d ", hand.kickers[0]);
 
 		if (i < game->hands_num - 1) {
 			printf(" ");

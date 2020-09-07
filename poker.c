@@ -5,8 +5,10 @@
 #include "txshldm.h"
 
 static char doc[] =
-		"poker - programm for sorting Texas Holdem Hands\
-\v to pass input from file:\n	cat ./test.txt | ./poker\n";
+		"poker - programm for sorting Texas Holdem and Omaha Holdem Hands"
+"\vTo pass input from file:\n"
+"		cat ./test.txt | ./poker\n"
+"		cat ./testOmaha.txt | ./poker --omaha";
 
 static char args_doc[] = "";
 
@@ -49,22 +51,16 @@ int main(int argc, char **argv) {
 
 	if (arguments.omaha == 1) {
 		game.omaha = 1;
-		printf("Omaha not implemented\n");
-		exit(1);
 	}
 
 	while (fgets(line, sizeof(line), stdin) != NULL) {
 		txs_read_cards(line, &game);
-		//printf("game.omaha: %d\n", game.omaha);
-		//printf("game.hands_num: %d\n", game.hands_num);
-		//print_ccards(&game);
-
 		evaluate_hands(&game);
+		//print_ccards(&game);
 		//print_hands(&game);
 		sort_hands(&game);
 		print_sorted_hands(&game);
-		//print_best_combinations(&game);
-		//printf("\n");
+		//print_best_combinations(&game);S
 	}
 
 	return 0;

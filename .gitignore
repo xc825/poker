@@ -50,3 +50,10 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+#poker project files
+poker
+.settings
+.project
+.cproject
+

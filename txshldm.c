@@ -165,6 +165,7 @@ int is_straight_flush(int *r5, int *s5, int kickers[3]){
 
 	return (n == 5);
 }
+
 int is_four_of_a_kind(int *r5, int *s5, int kickers[3]) {
 	int i, j, n4;
 	for (i = 0; i < 5; i++) {
@@ -287,6 +288,7 @@ int is_three_of_a_kind(int *r5, int *s5, int kickers[3]) {
 
 	return 0;
 }
+
 int is_two_pairs(int *r5, int *s5, int kickers[3]) {
 	int i,j;
 	int pair1 = 0;
@@ -448,7 +450,6 @@ int evaluate_hand_Texas(txs_game *game, int hand_num) {
 	return 0;
 }
 
-
 int evaluate_hand_Omaha(txs_game *game, int hand_num) {
 	//printf("%s()\n", __func__);
 	int c1,c2,c3,h1,h2;
@@ -534,8 +535,6 @@ int sort_hands(txs_game *game) {
 	qsort(game->hands_sorted, game->hands_num, sizeof(txs_hand), compare_hands);
 	return 0;
 }
-
-
 
 void print_ccards(txs_game *game) {
 	int i;

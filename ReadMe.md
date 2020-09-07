@@ -8,7 +8,7 @@ Tested on Ubuntu 20.04 LTS
 
 In folder ./poker run:
 
-`make`
+`$ make`
 
 
 ####Running
@@ -18,11 +18,11 @@ In folder ./poker run
 
 To feed stream from file run
 
-`cat ./test.txt | ./poker`
+`$ cat ./test.txt | ./poker`
 
 or
 
-`cat ./testOmaha.txt | ./poker --omaha`
+`$ cat ./testOmaha.txt | ./poker --omaha`
 
 
 ####Extra credits:

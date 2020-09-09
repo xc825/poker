@@ -62,4 +62,10 @@ Like in home task example (but without empty line between lines, I don't know ho
 2h3h4h5d8d KdKs 9hJh
 
 
-P.S. It works on my machine! :)
+####Verbose mode
+
+For debug purpose added verbose mode which prints best possible combination for each hand
+
+`./dealer --lines=1 --hands=10 --omaha | ./poker --omaha --verbose`
+
+

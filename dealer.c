@@ -9,6 +9,7 @@ static char doc[] =
 		"\vTo pass input from file:\n"
 		"		./dealer | ./poker --lines=10\n"
 		"		./dealer | ./poker --lines=2500 --omaha\n"
+		"		./dealer | ./poker --lines=1 --hands=2\n"
 		"where 'lines' is number lines to generate";
 
 static char args_doc[] = "";
@@ -21,10 +22,12 @@ static char deck[52 * 2] = "AhKhQhJhTh9h8h7h6h5h4h3h2h"
 
 #define OPT_OMAHA	1
 #define OPT_LINES	2
+#define OPT_HANDS	3
 
 static struct argp_option options[] = {
 		{"omaha",  OPT_OMAHA, 0,       OPTION_ARG_OPTIONAL, "Omaha option" },
 		{"lines",  OPT_LINES , "COUNT",       0, "Number of lines to generate" },
+		{"hands",  OPT_HANDS , "COUNT",       0, "Number of hands in line" },
 		{ 0 }
 };
 
@@ -32,6 +35,7 @@ struct arguments
 {
 	int omaha;
 	int lines;
+	int hands;
 };
 
 static error_t
@@ -46,6 +50,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
 		break;
 	case OPT_LINES:
 		arguments->lines = (arg ? atoi (arg) : 1);
+		break;
+	case OPT_HANDS:
+		arguments->hands = (arg ? atoi (arg) : 0);
 		break;
 	case ARGP_KEY_NO_ARGS:
 		break;
@@ -93,8 +100,14 @@ int main(int argc, char **argv) {
 
 		line[p++] = ' ';
 
-		players = (arguments.omaha) ? 11 : 23;
-		hands = (int) (rand() % (players - 2) + 2 + 1);
+		if (!arguments.hands) {
+			players = (arguments.omaha) ? 11 : 23;
+			hands = (int) (rand() % (players - 2) + 2 + 1);
+		} else if (arguments.omaha) {
+			hands = (arguments.hands <= 11 && arguments.hands >= 2) ? arguments.hands : 2;
+		} else {
+			hands = (arguments.hands <= 23 && arguments.hands >= 2) ? arguments.hands : 2;
+		}
 
 		for (h = 0; h < hands; h++) {
 			int n;

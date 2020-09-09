@@ -8,20 +8,25 @@ static char doc[] =
 		"poker - programm for sorting Texas Holdem and Omaha Holdem Hands"
 "\vTo pass input from file:\n"
 "		cat ./test.txt | ./poker\n"
-"		cat ./testOmaha.txt | ./poker --omaha";
+"		cat ./testOmaha.txt | ./poker --omaha\n"
+"Only for debug purposes:\n"
+"		cat ./testOmaha.txt | ./poker --omaha --verbose";
 
 static char args_doc[] = "";
 
 #define OPT_OMAHA  1
+#define OPT_VERBOSE 2
 
 static struct argp_option options[] = {
 		{"omaha",  OPT_OMAHA, 0,       OPTION_ARG_OPTIONAL, "Omaha option" },
+		{"verbose",  OPT_VERBOSE, 0,       OPTION_ARG_OPTIONAL, "print best combination for each hand" },
 		{ 0 }
 };
 
 struct arguments
 {
 	int omaha;
+	int verbose;
 };
 
 static error_t
@@ -33,6 +38,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	{
 	case OPT_OMAHA:
 		arguments->omaha = 1;
+		break;
+	case OPT_VERBOSE:
+		arguments->verbose = 1;
 		break;
 	default:
 		return ARGP_ERR_UNKNOWN;
@@ -56,11 +64,17 @@ int main(int argc, char **argv) {
 	while (fgets(line, sizeof(line), stdin) != NULL) {
 		txs_read_cards(line, &game);
 		evaluate_hands(&game);
-		//print_ccards(&game);
-		//print_hands(&game);
 		sort_hands(&game);
+
+		if (arguments.verbose) {
+			printf("%s", line);
+		}
+
 		print_sorted_hands(&game);
-		//print_best_combinations(&game);S
+
+		if (arguments.verbose) {
+			print_best_combinations(&game);
+		}
 	}
 
 	return 0;

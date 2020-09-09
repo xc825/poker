@@ -603,13 +603,20 @@ void print_sorted_hands(txs_game *game) {
 
 void print_best_combinations(txs_game *game) {
 	int i;
-	printf("best: \n");
+	printf("best combinations: \n");
 	for (i = 0; i < game->hands_num; i++) {
-		char tmp[11] = {0};
+		char tmp[20] = {0};
+		int cards;
+
+		cards = (game->omaha) ? 4 : 2;
+
+		snprintf(tmp, cards * 2 + 1, "%s", (char*)game->hands_sorted[i].cards);
+		printf("%s  ", tmp);
+
 		snprintf(tmp, 11, "%s", (char*)game->hands_sorted[i].best_combination);
 		printf("%s - %s\n", tmp, hand_value_name[game->hands_sorted[i].value]);
 	}
-	printf("\n");
+	printf("\n\n");
 }
 
 int get_rank_value(char rank) {

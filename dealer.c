@@ -94,7 +94,7 @@ int main(int argc, char **argv) {
 		line[p++] = ' ';
 
 		players = (arguments.omaha) ? 11 : 23;
-		hands = (int) (rand() % (players - 2) + 2);
+		hands = (int) (rand() % (players - 2) + 2 + 1);
 
 		for (h = 0; h < hands; h++) {
 			int n;

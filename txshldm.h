@@ -4,7 +4,8 @@
 #define FAIL 1
 #define SUCCESS 0
 
-#define MAX_PLAYERS 23
+//#define MAX_PLAYERS 23
+#define MAX_PLAYERS 100
 #define COMMUNITY_CARDS_NUM 5
 #define MAX_CARDS_ON_HAND 4
 #define FIVE 5

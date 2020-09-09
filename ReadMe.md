@@ -15,8 +15,8 @@ make
 To rebuild, run:
 
 ```
-make clean
-make
+make clean;
+make;
 ```
 
 
@@ -31,7 +31,7 @@ In folder _poker_ run
 To feed stream from file run
 
 ```
-cat ./test.txt | ./poker`
+cat ./test.txt | ./poker
 cat ./testOmaha.txt | ./poker --omaha
 ```
 
@@ -39,14 +39,14 @@ cat ./testOmaha.txt | ./poker --omaha
 To generate file for input run:
 
 ```
-./dealer --lines=n >texas_input.txt`
+./dealer --lines=n >texas_input.txt
 ./dealer --lines=n --omaha >omaha_input.txt
 ```
 
 To pass generated inpt lines directly to poker program:
 
 ```
-./dealer --lines=n | ./poker`
+./dealer --lines=n | ./poker
 ./dealer --lines=n --omaha | ./poker --omaha
 ```
 
@@ -77,6 +77,7 @@ input:
 4cKs4h8s7s Ad4s Ac4d As9s KhKd 5d6d
 2h3h4h5d8d KdKs 9hJh
 ```
+
 output:
 
 ```
@@ -84,12 +85,13 @@ Ac4d=Ad4s 5d6d As9s KhKd
 KdKs 9hJh
 ```
 
-####Verbose mode
+#### Verbose mode
 
 For debug purpose added verbose mode, which prints best possible combination for each hand
 
 ```
-./dealer --lines=1 --hands=10 --omaha | ./poker --omaha --verbose`
+./dealer --lines=1 --hands=10 | ./poker --verbose
+./dealer --lines=1 --hands=10 --omaha | ./poker --omaha --verbose
 ```
 
 

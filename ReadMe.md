@@ -55,7 +55,7 @@ After five first cards must exactry one space symbol.
 Between hands is exactly one space symbol.
 After each line exactly one new line symbol "\n".
 
-Like in home task example (but without emty line between lines, I don't know how to write correct markdown):
+Like in home task example (but without empty line between lines, I don't know how to write correct markdown):
 
 4cKs4h8s7s Ad4s Ac4d As9s KhKd 5d6d
 

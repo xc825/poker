@@ -72,7 +72,7 @@ int txs_read_cards(char *line, txs_game *game) {
 	return SUCCESS;
 }
 
-hand_value evaluate_five(txs_card *five, int kickers[3]) {
+hand_value evaluate_five(txs_card *five, int kickers[3], txs_game *game) {
 	//printf("%s()\n", __func__);
 	int rank5[5] = {0};
 	int suite5[5] = {0};
@@ -89,7 +89,7 @@ hand_value evaluate_five(txs_card *five, int kickers[3]) {
 	//printf("\n");
 	if (is_royal_flush(rank5, suite5, kickers))
 		return ROYAL_FLUSH;
-	else if (is_straight_flush(rank5, suite5, kickers))
+	else if (is_straight_flush(rank5, suite5, kickers, game))
 		return STRAIGHT_FLUSH;
 	else if (is_four_of_a_kind(rank5, suite5, kickers))
 		return FOUR_OF_A_KIND;
@@ -97,7 +97,7 @@ hand_value evaluate_five(txs_card *five, int kickers[3]) {
 		return FULL_HOUSE;
 	else if (is_flush(rank5, suite5, kickers))
 		return FLUSH;
-	else if (is_straight(rank5, suite5, kickers))
+	else if (is_straight(rank5, suite5, kickers, game))
 		return STRAIGHT;
 	else if (is_three_of_a_kind(rank5, suite5, kickers))
 		return THREE_OF_A_KIND;
@@ -129,7 +129,7 @@ int is_royal_flush(int *r5, int *s5, int kickers[3]) {
 	return 1;
 }
 
-int is_straight_flush(int *r5, int *s5, int kickers[3]){
+int is_straight_flush(int *r5, int *s5, int kickers[3], txs_game *game){
 	int i;
 	int b;
 	int n;
@@ -139,9 +139,12 @@ int is_straight_flush(int *r5, int *s5, int kickers[3]){
 		return 0;
 	for (i = 0; i < 5; i++){
 		ranks |= r5[i];
-		//for straight with Ace = 1
-		if (r5[i] == 1 << 14)
-			ranks |= 1 << 1;
+
+		if (!game->omaha) {
+			//for straight with Ace = 1 only in Texas Holdem
+			if (r5[i] == 1 << 14)
+				ranks |= 1 << 1;
+		}
 	}
 
 	for (b = 14, n = 0; b > 0 ; b--) {
@@ -155,11 +158,13 @@ int is_straight_flush(int *r5, int *s5, int kickers[3]){
 			break;
 	}
 
-	//remove A from value 14 in straight flush A23456
-	if((n == 5) && (ranks & 1 << 2))
-		ranks &= ~(1 << 14);
-	else
-		ranks &= ~(1 << 1);
+	if (!game->omaha) {
+		//remove A from value 14 in straight flush A23456 only in Texas Holdem
+		if((n == 5) && (ranks & 1 << 2))
+			ranks &= ~(1 << 14);
+		else
+			ranks &= ~(1 << 1);
+	}
 
 	kickers[0] = ranks;
 
@@ -230,7 +235,7 @@ int is_flush(int *r5, int *s5, int kickers[3]) {
 	return 1;
 }
 
-int is_straight(int *r5, int *s5, int kickers[3]) {
+int is_straight(int *r5, int *s5, int kickers[3], txs_game *game) {
 	int i;
 	int b;
 	int n;
@@ -239,9 +244,11 @@ int is_straight(int *r5, int *s5, int kickers[3]) {
 	for (i = 0; i < 5; i++){
 		ranks |= r5[i];
 
-		//for straight with Ace = 1
-		if (r5[i] == 1 << 14)
-			ranks |= 1 << 1;
+		if (!game->omaha) {
+			//for straight with Ace = 1; only for Texas Holdem
+			if (r5[i] == 1 << 14)
+				ranks |= 1 << 1;
+		}
 	}
 
 	for (b = 14, n = 0; b > 0 ; b--) {
@@ -255,11 +262,13 @@ int is_straight(int *r5, int *s5, int kickers[3]) {
 			break;
 	}
 
-	//remove A from value 14 in straight flush A23456
-	if((n == 5) && (ranks & 1 << 2))
-		ranks &= ~(1 << 14);
-	else
-		ranks &= ~(1 << 1);
+	if (!game->omaha) {
+		//remove A from value 14 in straight flush A23456; only in Texas Holdem
+		if((n == 5) && (ranks & 1 << 2))
+			ranks &= ~(1 << 14);
+		else
+			ranks &= ~(1 << 1);
+	}
 
 	kickers[0] = ranks;
 
@@ -428,7 +437,7 @@ int evaluate_hand_Texas(txs_game *game, int hand_num) {
 			//printf("\n");
 
 			//printf("i:%d, j:%d", i, j);
-			val = evaluate_five(cards5, kickers);
+			val = evaluate_five(cards5, kickers, game);
 			if ( val > game->hands[hand_num].value) {
 				memcpy(game->hands[hand_num].best_combination, cards5, sizeof(txs_card) * 5);
 				memcpy(game->hands[hand_num].kickers, kickers, sizeof(int) * 3);
@@ -476,7 +485,7 @@ int evaluate_hand_Omaha(txs_game *game, int hand_num) {
 						cards5[3] = game->hands[hand_num].cards[h1];
 						cards5[4] = game->hands[hand_num].cards[h2];
 
-						val = evaluate_five(cards5, kickers);
+						val = evaluate_five(cards5, kickers, game);
 						if ( val > game->hands[hand_num].value) {
 							memcpy(game->hands[hand_num].best_combination, cards5, sizeof(txs_card) * 5);
 							memcpy(game->hands[hand_num].kickers, kickers, sizeof(int) * 3);

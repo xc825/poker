@@ -66,7 +66,7 @@ int get_rank_value(char rank);
 
 int get_suite_value(char suite);
 
-hand_value evaluate_five(txs_card *five, int *kickers);
+hand_value evaluate_five(txs_card *five, int *kickers, txs_game *game);
 
 int evaluate_hands(txs_game *game);
 
@@ -81,11 +81,11 @@ int compare_hands(const void *hand1, const void *hand2);
 int sort_hands(txs_game *game);
 
 int is_royal_flush(int *rank5, int *suite5, int kickers[3]);
-int is_straight_flush(int *rank5, int *suite5, int kickers[3]);
+int is_straight_flush(int *rank5, int *suite5, int kickers[3], txs_game *game);
 int is_four_of_a_kind(int *rank5, int *suite5, int kickers[3]);
 int is_full_house(int *rank5, int *suite5, int kickers[3]);
 int is_flush(int *rank5, int *suite5, int kickers[3]);
-int is_straight(int *rank5, int *suite5, int kickers[3]);
+int is_straight(int *rank5, int *suite5, int kickers[3], txs_game *game);
 int is_three_of_a_kind(int *rank5, int *suite5, int kickers[3]);
 int is_two_pairs(int *rank5, int *suite5, int kickers[3]);
 int is_pair(int *rank5, int *suite5, int kickers[3]);

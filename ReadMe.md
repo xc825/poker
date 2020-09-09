@@ -51,7 +51,7 @@ Caculating 25000 lines of random lenght (2-23 hands) Texas Holdem input on Intel
 Calculating 25000 lines of radom lenght (2 - 11 hands) Omaha Holdem takes ~120 seconds. (240 seconds if all lines contains 11 hands)
 
 Invalid input is not handled. Program will just crash.
-After five first cards must exactry one space symbol.
+After five first cards must be exactly one space symbol.
 Between hands is exactly one space symbol.
 After each line exactly one new line symbol "\n".
 

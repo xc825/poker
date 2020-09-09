@@ -53,7 +53,9 @@ dkms.conf
 
 #poker project files
 poker
+dealer
 .settings
 .project
 .cproject
+aaa.txt
 

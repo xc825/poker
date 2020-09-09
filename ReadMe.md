@@ -48,7 +48,7 @@ Max hands in Texas Holdem line - 23 hands.
 Max hands in Omaha Holdem line - 11 hands
 
 Caculating 25000 lines of random lenght (2-23 hands) Texas Holdem input on Intel Core i5 7th gen CPU takes ~ 15 seconds.
-Calculating 25000 lines of radom lenght (2 - 12 hands) Omaha Holdem takes ~120 seconds. (240 seconds if all lines contains 12 hands)
+Calculating 25000 lines of radom lenght (2 - 11 hands) Omaha Holdem takes ~120 seconds. (240 seconds if all lines contains 11 hands)
 
 Invalid input is not handled. Program will just crash.
 After five first cards must exactry one space symbol.

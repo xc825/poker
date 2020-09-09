@@ -44,7 +44,7 @@ static struct argp argp = { options, parse_opt, args_doc, doc };
 
 int main(int argc, char **argv) {
 	struct arguments arguments;
-	char line[200];
+	char line[2000];
 	txs_game game = {0};
 
 	argp_parse (&argp, argc, argv, 0, 0, &arguments);

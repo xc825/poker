@@ -62,7 +62,10 @@ int main(int argc, char **argv) {
 	}
 
 	while (fgets(line, sizeof(line), stdin) != NULL) {
-		txs_read_cards(line, &game);
+		if (txs_read_cards(line, &game) != SUCCESS) {
+			printf("Error: line does not fit the pattern\n");
+			continue;
+		}
 		evaluate_hands(&game);
 		sort_hands(&game);
 

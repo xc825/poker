@@ -46,25 +46,35 @@ int txs_read_cards(char *line, txs_game *game) {
 	game->hands_num = 0;
 
 	for (i = 0, p = line; i < COMMUNITY_CARDS_NUM; i++) {
+		if (!get_rank_value(*p))
+			return FAIL;
+
 		game->ccards[i].c[0] = *(p++);
+
+		if (!get_suite_value(*p))
+			return FAIL;
+
 		game->ccards[i].c[1] = *(p++);
 	}
 
 	for (i = 0; *p != 0 && *p != '\n'; i++) {
+		int c, cards;
+		if (*p != ' ')
+			return FAIL;
 		p++;
+
 		txs_hand empty_hand = {0};
 		game->hands_num++;
 		game->hands[i] = empty_hand;
-		game->hands[i].cards[0].c[0] = *(p++);
-		game->hands[i].cards[0].c[1] = *(p++);
-		game->hands[i].cards[1].c[0] = *(p++);
-		game->hands[i].cards[1].c[1] = *(p++);
 
-		if (game->omaha) {
-			game->hands[i].cards[2].c[0] = *(p++);
-			game->hands[i].cards[2].c[1] = *(p++);
-			game->hands[i].cards[3].c[0] = *(p++);
-			game->hands[i].cards[3].c[1] = *(p++);
+		cards = (game->omaha) ? 4 : 2;
+		for (c = 0; c < cards; c++) {
+			if (!get_rank_value(*p))
+				return FAIL;
+			game->hands[i].cards[0].c[0] = *(p++);
+			if (!get_suite_value(*p))
+				return FAIL;
+			game->hands[i].cards[0].c[1] = *(p++);
 		}
 	}
 
@@ -625,8 +635,6 @@ int get_rank_value(char rank) {
 		if (rank_values[i].rank == rank)
 			return rank_values[i].value;
 	}
-	//printf("incorrect rank: [%d]\n", rank);
-	//exit(1);
 	return 0;
 }
 
@@ -637,8 +645,7 @@ int get_suite_value(char suite) {
 		if (suite_values[i].suite == suite)
 			return suite_values[i].value;
 	}
-	printf("incorrect suite character: [%c]", suite);
-	exit(1);
+	return 0;
 }
 
 const char *get_hand_value_name(hand_value val) {

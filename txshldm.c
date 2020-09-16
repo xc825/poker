@@ -328,8 +328,9 @@ int is_two_pairs(int *r5, int *s5, int kickers[3]) {
 		if ( n == 2) {
 			if (!pair1)
 				pair1 = i;
-			else
+			else if (!pair2)
 				pair2 = i;
+
 		}
 	}
 
@@ -342,8 +343,10 @@ int is_two_pairs(int *r5, int *s5, int kickers[3]) {
 			kickers[0] = 1 << pair2;
 			kickers[1] = 1 << pair1;
 		}
+
 		kickers[2] = (r5[0] | r5[1] | r5[2] | r5[3] | r5[4]) &
-				(~(1 << pair1) | ~(1 << pair2));
+				(~(1 << pair1 | 1 << pair2));
+
 		return 1;
 	}
 
@@ -465,7 +468,8 @@ int evaluate_hand_Texas(txs_game *game, int hand_num) {
 						memcpy(game->hands[hand_num].kickers, kickers, sizeof(int) * 3);
 						game->hands[hand_num].value = val;
 						break;
-					}
+					} else if (kickers[k] < game->hands[hand_num].kickers[k])
+						break;
 				}
 			}
 		}
@@ -513,7 +517,8 @@ int evaluate_hand_Omaha(txs_game *game, int hand_num) {
 									memcpy(game->hands[hand_num].kickers, kickers, sizeof(int) * 3);
 									game->hands[hand_num].value = val;
 									break;
-								}
+								} else if (kickers[k] < game->hands[hand_num].kickers[k])
+									break;
 							}
 						}
 					}

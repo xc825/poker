@@ -96,6 +96,11 @@ hand_value evaluate_five(txs_card *five, int kickers[3], txs_game *game) {
 		//printf("[%c %d]", five[i].c[0], rank5[i]);
 		//printf("[%c %d] ", five[i].c[1], suite5[i]);
 	}
+
+	kickers[0] = 0;
+	kickers[1] = 0;
+	kickers[2] = 0;
+
 	//printf("\n");
 	if (is_royal_flush(rank5, suite5, kickers))
 		return ROYAL_FLUSH;

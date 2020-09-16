@@ -343,7 +343,7 @@ int is_two_pairs(int *r5, int *s5, int kickers[3]) {
 			kickers[1] = 1 << pair1;
 		}
 		kickers[2] = (r5[0] | r5[1] | r5[2] | r5[3] | r5[4]) &
-				~(1 << pair1) & ~(1 << pair2);
+				(~(1 << pair1) | ~(1 << pair2));
 		return 1;
 	}
 

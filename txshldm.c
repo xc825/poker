@@ -58,7 +58,6 @@ int txs_read_cards(char *line, txs_game *game) {
 	}
 
 	for (i = 0; *p != 0 && *p != '\n'; i++) {
-		int c, cards;
 		if (*p != ' ')
 			return FAIL;
 		p++;
@@ -67,14 +66,16 @@ int txs_read_cards(char *line, txs_game *game) {
 		game->hands_num++;
 		game->hands[i] = empty_hand;
 
-		cards = (game->omaha) ? 4 : 2;
-		for (c = 0; c < cards; c++) {
-			if (!get_rank_value(*p))
-				return FAIL;
-			game->hands[i].cards[0].c[0] = *(p++);
-			if (!get_suite_value(*p))
-				return FAIL;
-			game->hands[i].cards[0].c[1] = *(p++);
+		game->hands[i].cards[0].c[0] = *(p++);
+		game->hands[i].cards[0].c[1] = *(p++);
+		game->hands[i].cards[1].c[0] = *(p++);
+		game->hands[i].cards[1].c[1] = *(p++);
+
+		if (game->omaha) {
+			game->hands[i].cards[2].c[0] = *(p++);
+			game->hands[i].cards[2].c[1] = *(p++);
+			game->hands[i].cards[3].c[0] = *(p++);
+			game->hands[i].cards[3].c[1] = *(p++);
 		}
 	}
 
